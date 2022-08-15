@@ -69,6 +69,9 @@ class LonposSolver():
        
         return [tuple(column) for column in np.transpose(rotated)]
 
+    # TODO: Add a flip block function which flips the block in one of the axes. This is necesarry since not all blocks are symmetric. 
+    # This function should be the same as the rotate except the r_matrix.
+
     def is_valid(self,board,position):
         """ Checks if a position is in the given board and the place in this position it also is empty and returns the boolean value
         """
@@ -149,10 +152,8 @@ class LonposSolver():
                 
                 # If the block is placed
                 if check:
-                    print(new_board)
                     # Try to solve the new_board with the remaining blocks
                     result = self.__solve(new_board, block_names_set.difference(set([block_name])))
-                    print(result)
                     # If it was possible to fill it return the result
                     if result is not None:
                         return result 
@@ -172,21 +173,7 @@ class LonposSolver():
 
 
 
-blocks_dict = {1:[(0,0),(1,0),(1,1)], 2:[(0,0),(0,1),(1,1)],3:[(0,0),(0,1),(1,1),(1,0)]}
 
-
-my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (3,2))
-
-# new_board, check = my_solver.place_block(my_solver.board,1,blocks_dict[1],(0,0))
-
-# print( new_board)
-
-print(my_solver.solve())
-
-# print(my_solver.rotate_block(blocks_dict[3]))
-
-    
-    
     
 
 
