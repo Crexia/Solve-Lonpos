@@ -55,23 +55,19 @@ class LonposSolver():
 
         # The columns of this matrix are the relative points of the blocks
         c_matrix = np.transpose(np.array(block_points))
-        print("C_matrix: ", c_matrix)
 
         rotated = r_matrix @ c_matrix
-        print("Rotated: ", rotated)
 
         # We still need to shift the points 
         # Find the minimum of each axis and push it so that the left-top corner is the new origin
         leftmost = min(rotated[1])
 
-        print("Leftmost", leftmost)
-
         # Find the point with the maximum y which is in the leftmost column and shift accordingly so that this point is the (0,0) now
         rotated[0] += (abs(min([rotated[0][i] for i in range(len(rotated[1])) if rotated[1][i] == leftmost])) * np.ones((1,len(rotated[0])),dtype=int)).flatten()
 
         rotated[1] += (abs(leftmost) * np.ones((1,len(rotated[1])), dtype = int)).flatten()
-        print(rotated[:, 0:])
-        return [tuple(column) for column in rotated[:, 0:]]
+       
+        return [tuple(column) for column in np.transpose(rotated)]
 
     def is_empty(self,board,position):
         """ Checks if a position in the given board is empty and returns the boolean value
@@ -142,21 +138,24 @@ class LonposSolver():
             return board    
 
         if len(block_names_set) == 0:
+            print("hello")
             return None
 
         # For all remaining blocks in the set:
         for block_name in block_names_set:
-
+            print("Block_Name ", block_name)
             #For all rotations of the block:
             rotated_block_points = self.blocks_dict[block_name]
             for i in range(4):  
                 # Try to place the block
                 new_board, check = self.place_block(board,block_name,rotated_block_points,first_empty)
+                
                 # If the block is placed
                 if check:
-                   
+                    print(new_board)
                     # Try to solve the new_board with the remaining blocks
                     result = self.__solve(new_board, block_names_set.difference(set([block_name])))
+                    print(result)
                     # If it was possible to fill it return the result
                     if result is not None:
                         return result 
@@ -164,9 +163,11 @@ class LonposSolver():
                     # If it is not possible with this combination, iterate through other rotations and blocks
 
                 # Rotate the block
+                print("I rotated",rotated_block_points)
                 rotated_block_points = self.rotate_block(rotated_block_points)
 
-        return False
+        print("Hi")
+        return None
 
     def solve(self):
         result = self.__solve(self.board,set(self.blocks_dict.keys())) 
@@ -179,15 +180,15 @@ class LonposSolver():
 blocks_dict = {1:[(0,0),(1,0)], 2:[(0,0),(0,1)],3:[(0,0),(0,1),(1,1),(1,0)]}
 
 
-my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (2,3))
+my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (2,4))
 
 # new_board, check = my_solver.place_block(my_solver.board,1,blocks_dict[1],(0,0))
 
 # print( new_board)
 
-# print(my_solver.solve())
+print(my_solver.solve())
 
-print(my_solver.rotate_block(blocks_dict[3]))
+# print(my_solver.rotate_block(blocks_dict[3]))
 
     
     
