@@ -69,10 +69,10 @@ class LonposSolver():
        
         return [tuple(column) for column in np.transpose(rotated)]
 
-    def is_empty(self,board,position):
-        """ Checks if a position in the given board is empty and returns the boolean value
+    def is_valid(self,board,position):
+        """ Checks if a position is in the given board and the place in this position it also is empty and returns the boolean value
         """
-        if position[0] >= self.board_shape[0] or position[1] >= self.board_shape[1]:
+        if position[0] >= self.board_shape[0] or position[1] >= self.board_shape[1] or position[0]<0 or position[1]<0:
             return False
 
         return board[position] == 0
@@ -104,7 +104,7 @@ class LonposSolver():
 
       
             v_point = np.array(point)
-            if not self.is_empty(board, tuple(v_point + v_position)):
+            if not self.is_valid(board, tuple(v_point + v_position)):
                 return board , False
 
             new_board[tuple(v_point + v_position)] = block_name
@@ -121,7 +121,7 @@ class LonposSolver():
         for column in range(shape[1]):
             for row in range(shape[0]):
                 position = (row,column)
-                if self.is_empty(board,position):
+                if self.is_valid(board,position):
                     return position
         return None   
 
@@ -130,7 +130,6 @@ class LonposSolver():
         """
 
         first_empty = self.find_first_empty(board)
-        print(first_empty)
 
 
         # If there isn't any empty point in the board return the solution
@@ -138,12 +137,10 @@ class LonposSolver():
             return board    
 
         if len(block_names_set) == 0:
-            print("hello")
             return None
 
         # For all remaining blocks in the set:
         for block_name in block_names_set:
-            print("Block_Name ", block_name)
             #For all rotations of the block:
             rotated_block_points = self.blocks_dict[block_name]
             for i in range(4):  
@@ -163,10 +160,8 @@ class LonposSolver():
                     # If it is not possible with this combination, iterate through other rotations and blocks
 
                 # Rotate the block
-                print("I rotated",rotated_block_points)
                 rotated_block_points = self.rotate_block(rotated_block_points)
 
-        print("Hi")
         return None
 
     def solve(self):
@@ -177,10 +172,10 @@ class LonposSolver():
 
 
 
-blocks_dict = {1:[(0,0),(1,0)], 2:[(0,0),(0,1)],3:[(0,0),(0,1),(1,1),(1,0)]}
+blocks_dict = {1:[(0,0),(1,0),(1,1)], 2:[(0,0),(0,1),(1,1)],3:[(0,0),(0,1),(1,1),(1,0)]}
 
 
-my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (2,4))
+my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (3,2))
 
 # new_board, check = my_solver.place_block(my_solver.board,1,blocks_dict[1],(0,0))
 
