@@ -55,17 +55,22 @@ class LonposSolver():
 
         # The columns of this matrix are the relative points of the blocks
         c_matrix = np.transpose(np.array(block_points))
+        print("C_matrix: ", c_matrix)
 
         rotated = r_matrix @ c_matrix
+        print("Rotated: ", rotated)
 
         # We still need to shift the points 
         # Find the minimum of each axis and push it so that the left-top corner is the new origin
         leftmost = min(rotated[1])
-        rotated[1] -= (leftmost * np.ones((1,len(rotated[1])), dtype = int)).flatten()
+
+        print("Leftmost", leftmost)
 
         # Find the point with the maximum y which is in the leftmost column and shift accordingly so that this point is the (0,0) now
-        rotated[0] -= (max([rotated[0][i] for i in range(len(rotated[1])) if rotated[1][i] == leftmost]) * np.ones((1,len(rotated[1])),dtype=int)).flatten()
+        rotated[0] += (abs(min([rotated[0][i] for i in range(len(rotated[1])) if rotated[1][i] == leftmost])) * np.ones((1,len(rotated[0])),dtype=int)).flatten()
 
+        rotated[1] += (abs(leftmost) * np.ones((1,len(rotated[1])), dtype = int)).flatten()
+        print(rotated[:, 0:])
         return [tuple(column) for column in rotated[:, 0:]]
 
     def is_empty(self,board,position):
@@ -129,6 +134,7 @@ class LonposSolver():
         """
 
         first_empty = self.find_first_empty(board)
+        print(first_empty)
 
 
         # If there isn't any empty point in the board return the solution
@@ -146,12 +152,11 @@ class LonposSolver():
             for i in range(4):  
                 # Try to place the block
                 new_board, check = self.place_block(board,block_name,rotated_block_points,first_empty)
-
                 # If the block is placed
                 if check:
+                   
                     # Try to solve the new_board with the remaining blocks
                     result = self.__solve(new_board, block_names_set.difference(set([block_name])))
-
                     # If it was possible to fill it return the result
                     if result is not None:
                         return result 
@@ -171,17 +176,18 @@ class LonposSolver():
 
 
 
-blocks_dict = {1:[(0,0),(0,1)],2:[(0,0),(0,1)]}
+blocks_dict = {1:[(0,0),(1,0)], 2:[(0,0),(0,1)],3:[(0,0),(0,1),(1,1),(1,0)]}
 
 
-my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (2,2))
+my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (2,3))
 
 # new_board, check = my_solver.place_block(my_solver.board,1,blocks_dict[1],(0,0))
 
 # print( new_board)
 
-print(my_solver.solve())
+# print(my_solver.solve())
 
+print(my_solver.rotate_block(blocks_dict[3]))
 
     
     
