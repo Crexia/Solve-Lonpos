@@ -24,7 +24,7 @@
 # SOFTWARE.
 # -----------------------------------------------------------
 
-# Gunes <3
+# Güneşime <3
 
 import numpy as np
 from termcolor import colored
