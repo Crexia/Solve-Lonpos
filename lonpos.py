@@ -26,6 +26,8 @@
 
 
 import numpy as np
+import os
+import time
 
 
 
@@ -154,6 +156,7 @@ class LonposSolver():
                 if check:
                     # Try to solve the new_board with the remaining blocks
                     result = self.__solve(new_board, block_names_set.difference(set([block_name])))
+                    
                     # If it was possible to fill it return the result
                     if result is not None:
                         return result 
