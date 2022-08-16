@@ -1,4 +1,6 @@
 from lonpos import LonposSolver
+import colored
+from colored import fg, bg, attr
 
 blocks_dict = {1:[(0,0),(1,0),(1,1)], 
                 2:[(0,0),(0,1),(1,0),(0,2)],
@@ -19,13 +21,17 @@ blocks_dict = {1:[(0,0),(1,0),(1,1)],
                 }
 
 
-my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (5,11))
+my_solver = LonposSolver(blocks_dict=blocks_dict, board_shape= (3,4))
 
 # new_board, check = my_solver.place_block(my_solver.board,1,blocks_dict[1],(0,0))
 
 # print( new_board)
 
-print(my_solver.solve())
+# print(my_solver.solve())
+
+
+print(fg(11) + 'hello' + attr('reset') + fg(110) + ' hi' + attr('reset') )
+
 
 # print(my_solver.rotate_block(blocks_dict[12]))
 

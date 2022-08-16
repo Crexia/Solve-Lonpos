@@ -24,12 +24,10 @@
 # SOFTWARE.
 # -----------------------------------------------------------
 
+# Gunes <3
 
 import numpy as np
-import os
-import time
-
-
+from termcolor import colored
 
 class LonposSolver():
 
@@ -46,10 +44,7 @@ class LonposSolver():
 
         self.blocks_dict = blocks_dict
         self.board_shape = board_shape
-        self.board = np.zeros(board_shape,dtype=int)
-
-
-
+        self.empty_board = np.zeros(board_shape,dtype=int)
 
     def rotate_block(self,block_points):
         r_matrix = np.array([[0,-1],
@@ -71,17 +66,13 @@ class LonposSolver():
        
         return [tuple(column) for column in np.transpose(rotated)]
 
-    # TODO: Add a flip block function which flips the block in one of the axes. This is necesarry since not all blocks are symmetric. 
-    # This function should be the same as the rotate except the r_matrix.
-
     def is_valid(self,board,position):
-        """ Checks if a position is in the given board and the place in this position it also is empty and returns the boolean value
+        """ Checks if a position is in the given board and the place in this position is empty and returns the boolean value
         """
         if position[0] >= self.board_shape[0] or position[1] >= self.board_shape[1] or position[0]<0 or position[1]<0:
             return False
 
         return board[position] == 0
-
 
     def place_block(self,board,block_name,block_points,position):
         """ Places the block if it's possible in the given position, returns a new board, if not possible returns False
@@ -97,30 +88,21 @@ class LonposSolver():
         :return: the new board with the block placed in the given position
         :rtype: np.matrix | boolean
         """ 
-
         new_board = board.copy()
 
         v_position = np.array(position) 
 
         # Iterate through all indicex of a block
         for point in block_points:
-
             # Return the old board if it is not possible to place and also false to indicate that the operation was failed
-
-      
             v_point = np.array(point)
             if not self.is_valid(board, tuple(v_point + v_position)):
                 return board , False
-
             new_board[tuple(v_point + v_position)] = block_name
-
         return new_board, True
-
-
 
     def find_first_empty(self,board):
         """ Find the first empty point in the given board. Iterates through rows and then columns for our heuristic 
-    
         """
         shape = np.shape(board)
         for column in range(shape[1]):
@@ -133,9 +115,7 @@ class LonposSolver():
     def __solve(self,board,block_names_set):
         """ Solve the given board with the given blocks recursively
         """
-
         first_empty = self.find_first_empty(board)
-
 
         # If there isn't any empty point in the board return the solution
         if first_empty is None:
@@ -165,14 +145,43 @@ class LonposSolver():
 
                 # Rotate the block
                 rotated_block_points = self.rotate_block(rotated_block_points)
-
         return None
 
-    def solve(self):
-        result = self.__solve(self.board,set(self.blocks_dict.keys())) 
+    def solve(self,board = None, blocks_left = None):
+        if board is None or blocks_left is None:
+            result = self.__solve(self.empty_board,set(self.blocks_dict.keys())) 
+        else:
+            result = self.__solve(board,blocks_left) 
+
         if result is not None:
             return result
         return False
+
+    def fill_board(self,blocks):
+        pass
+
+    
+    def draw_board(self,board):
+        """Converts the given board matrix into a colored representation of the board 
+        
+        """
+        colored_board = list()
+        color_dict= dict()
+
+        for row in board:
+            colored_row = list()
+            for entry in row:
+                if entry in color_dict:
+                    colored_row.append(colored("O",color_dict[entry]))
+                else:
+                    pass
+
+
+        
+
+
+
+
 
 
 
