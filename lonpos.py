@@ -27,7 +27,8 @@
 # Güneşime <3
 
 import numpy as np
-from termcolor import colored
+from colored import fg, bg, attr
+import random
 
 class LonposSolver():
 
@@ -169,12 +170,19 @@ class LonposSolver():
         color_dict= dict()
 
         for row in board:
-            colored_row = list()
+            colored_row = ""
             for entry in row:
-                if entry in color_dict:
-                    colored_row.append(colored("O",color_dict[entry]))
+                if entry == 0:
+                    symbol = "-"
                 else:
-                    pass
+                    symbol = "O"
+                if entry not in color_dict:
+                    color_dict[entry] = random.randint(0,255)
+                colored_row +=  fg(color_dict[entry]) + symbol
+                colored_row += attr('reset')
+            print(colored_row)
+            colored_board.append(colored_row)
+        return colored_board     
 
 
         
